@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\CustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -50,24 +50,13 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'user_mobile_no' => 'nullable|digits_between:10,12',
-            'user_type' => 'required|in:admin,user',
-        ]);
-
-        $validated['password'] = Hash::make($request->password);
-        if ($request->has('user_status')) {
-            $validated['user_status'] = $request->has('user_status') ? '1' : '0';
-        }
-        $validated['email_verified_at'] = now();
-        Customer::create($validated);
-        
+        $data = $request->validated();
+        $data['password'] = Hash::make($data['password']);
+        $data['user_status'] = $request->boolean('user_status');
+        $data['email_verified_at'] = now();
+        Customer::create($data);
         return redirect()->route('customers.index')->with('success', 'Customer created successfully');
     }
 
@@ -90,18 +79,11 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerRequest $request, Customer $customer)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $customer->id,
-            'user_mobile_no' => 'nullable|digits_between:10,12',
-            'user_type' => 'required|in:admin,user'
-        ]);
-        $validated['user_status'] = $request->has('user_status') ? "1" : "0";        
-        
-        $user = User::findOrFail($customer->id);
-        $user->update($validated);
+        $validated = $request->validate();
+        $customer = Customer::findOrFail($customer->id);
+        $customer->update($validated);
         return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
     }
 
@@ -110,8 +92,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        $user = User::findOrFail($customer->id);
-        $user->delete();
+        $customer = Customer::findOrFail($customer->id);
+        $customer->delete();
         return response()->json(['success' => true, 'message' => 'Customer deleted successfully']);
     }
 }

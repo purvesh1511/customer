@@ -43,6 +43,7 @@
                             </select>
                         </div>
                         <div class="mb-2 form-check">
+                            <input type="hidden" name="user_status" value="0">
                             <input type="checkbox" class="form-check-input" name="user_status" id="user_status" checked>
                             <label class="form-check-label" for="user_status">Active</label>
                         </div>
