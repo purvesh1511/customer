@@ -25,7 +25,17 @@
                     </x-nav-link>
                 </div>
             </div>
+            <div class="relative mt-4">
+                <a href="{{ route('cart.index') }}" class="flex items-center gap-2">
+                    🛒
+                    <span class="font-semibold">Cart</span>
 
+                    <span id="cart-count"
+                        class="absolute -top-2 -right-3 bg-red-600 text-white text-xs rounded-full px-2">
+                        {{ \App\Helpers\CartHelper::count() }}
+                    </span>
+                </a>
+            </div>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
@@ -89,6 +99,7 @@
         </div>
 
         <!-- Responsive Settings Options -->
+         
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>

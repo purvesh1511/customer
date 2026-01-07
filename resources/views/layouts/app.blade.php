@@ -33,7 +33,7 @@
                     </div>
                 </header>
             @endisset
-
+            
             <!-- Page Content -->
             <main>
                 {{ $slot }}
