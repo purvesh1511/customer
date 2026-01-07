@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +21,12 @@ Route::middleware('auth')->group(function () {
     // user
     Route::resource('customers', CustomerController::class)->except(['show']);
     Route::get('/customers/list', [CustomerController::class, 'list'])->name('customers.list');
+
+    // product
+    Route::resource('products', ProductController::class)->except(['show']);
+    Route::get('/products/list', [ProductController::class, 'list'])->name('products.list');
+
+
 });
 
 require __DIR__.'/auth.php';
