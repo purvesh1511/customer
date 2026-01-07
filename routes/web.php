@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Models\Post;
+use App\Events\PostCreated;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,6 +15,19 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+
+Route::get('/test-post', function () {
+    $post = Post::create([
+        'title'   => 'Observer Test Post',
+        'content' => 'Checking observer via route',
+        'user_id' => Auth::id(),
+        // slug not passed intentionally
+    ]);
+    
+    return $post;
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
